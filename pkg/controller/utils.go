@@ -3,8 +3,8 @@ package controller
 import (
 	"net/http"
 
-	"github.com/Chadi-Mangle/CodeBlog/pkg/view"
 	"github.com/Chadi-Mangle/CodeBlog/pkg/logging"
+	"github.com/Chadi-Mangle/CodeBlog/pkg/view"
 )
 
 type Action func(http.ResponseWriter, *http.Request)

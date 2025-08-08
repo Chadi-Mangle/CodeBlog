@@ -7,7 +7,7 @@ import (
 
 type Page struct {
 	Template *template.Template
-	filename string
+	Filename string
 }
 
 type View struct {
@@ -17,6 +17,6 @@ type View struct {
 	Edit  Page
 }
 
-func (self *Page) Render(w http.ResponseWriter, data any) error {
-	return self.Template.ExecuteTemplate(w, self.filename, data)
+func (p *Page) Render(w http.ResponseWriter, data any) error {
+	return p.Template.ExecuteTemplate(w, p.Filename, data)
 }

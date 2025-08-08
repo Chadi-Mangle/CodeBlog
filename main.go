@@ -8,7 +8,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/Chadi-Mangle/CodeBlog/pkg/router"
+	"github.com/Chadi-Mangle/CodeBlog/pkg/controller"
+	"github.com/Chadi-Mangle/CodeBlog/pkg/view"
 )
 
 //go:embed templates
@@ -18,11 +19,23 @@ func main() {
 	port := ":8080"
 	tmpl := template.Must(template.ParseFS(tmplFS, "templates/*"))
 
-	router := router.NewServeTemplate(tmpl)
+	router := http.NewServeMux()
 
-	type Data struct{ Name string }
+	index := view.Page{
+		Template: tmpl,
+		Filename: "index.html",
+	}
 
-	router.HandleTemplate("GET /{$}", tmpl, "index.html", Data{Name: "World !"})
+	IndexView := view.View{
+		Index: index,
+	}
+
+	IndexController := controller.NewController(&IndexView, nil)
+
+	router.HandleFunc("GET /", IndexController.Index(
+		func(r *http.Request) any {
+			return struct{ Name string }{Name: "World"}
+		}))
 
 	srv := http.Server{
 		Addr:    port,

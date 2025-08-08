@@ -17,8 +17,11 @@ func NewServeTemplate(template *template.Template) *ServeTemplate {
 	}
 }
 
-func (s *ServeTemplate) HandleTemplate(pattern string, template *template.Template, filename string, data any) {
+func (s *ServeTemplate) HandleTemplate(pattern string, filename string, query func(r *http.Request) any) {
 	s.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-		template.ExecuteTemplate(w, filename, data)
+		data := query(r)
+		if err := s.template.ExecuteTemplate(w, filename, data); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	})
 }
